@@ -258,7 +258,7 @@ jobs:
       run: |
         sudo apt-get install -y bear
         cd $GITHUB_WORKSPACE/kernel_workspace
-        git clone https://github.com/rankalpha/hardware-breakpoint.git
+        git clone https://github.com/rankalpha2023/hardware-breakpoint.git
         cd hardware-breakpoint
         export KERNEL_DIR=$GITHUB_WORKSPACE/kernel_workspace/android-kernel
         export CROSS=aarch64-linux-android-
