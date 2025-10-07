@@ -262,8 +262,15 @@ jobs:
         cd hardware-breakpoint
         export KERNEL_DIR=$GITHUB_WORKSPACE/kernel_workspace/android-kernel
         export CROSS=aarch64-linux-android-
-        bear -- make KERNEL_DIR=$GITHUB_WORKSPACE/kernel_workspace/android-kernel CROSS=aarch64-linux-android-
-  
+        export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang-aosp/bin:$PATH
+        export CROSS_COMPILE=aarch64-linux-android-
+        export CROSS_COMPILE_ARM32=arm-linux-androideabi-
+        export CLANG_TRIPLE=aarch64-linux-gnu-
+        bear make LLVM=1 LLVM_IAS=1
+        if [ -f hw_break.ko ]; then
+          echo "MAKE_HW_BREAK_KO_IS_OK=true" >> $GITHUB_ENV
+        fi
+        
     - name: Make Anykernel3
       if: env.CHECK_FILE_IS_OK == 'true'
       run: |
@@ -319,3 +326,11 @@ jobs:
       with:
         name: boot${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}
         path: kernel_workspace/boot.img
+
+    - name: Upload hw_break.ko
+      if: env.MAKE_HW_BREAK_KO_IS_OK == 'true'
+      uses: actions/upload-artifact@main
+      with:
+        name: hw_break.ko
+        path: kernel_workspace/hardware-breakpoint/hw_break.ko
+        
