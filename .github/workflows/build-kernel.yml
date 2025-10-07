@@ -253,6 +253,16 @@ jobs:
                exit 1
            fi
        fi
+
+    - name: Compile hardware-breakpoint
+      run: |
+        sudo apt-get install -y bear
+        cd $GITHUB_WORKSPACE/kernel_workspace
+        git clone https://github.com/rankalpha/hardware-breakpoint.git
+        cd hardware-breakpoint
+        export KERNEL_DIR=$GITHUB_WORKSPACE/kernel_workspace/android-kernel
+        export CROSS=aarch64-linux-android-
+        bear -- make KERNEL_DIR=$GITHUB_WORKSPACE/kernel_workspace/android-kernel CROSS=aarch64-linux-android-
   
     - name: Make Anykernel3
       if: env.CHECK_FILE_IS_OK == 'true'
